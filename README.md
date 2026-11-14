@@ -1,155 +1,155 @@
-# Trabalho Prático de Engenharia de Dados
+# Data Engineering Practical Project
 
-Repositório do trabalho prático da disciplina de Engenharia de Dados, ministrada pelo professor André Britto de Carvalho pela Universidade Federal de Sergipe.
+Repository for the practical project of the Data Engineering course, taught by Professor André Britto de Carvalho at the Federal University of Sergipe (UFS).
 
-O projeto é dividido em três partes: CRUD relacional (PostgreSQL), CRUD NoSQL (MongoDB) e integração de dados em um esquema estrela (ETL com Apache Hop).
+The project is divided into three parts: relational CRUD (PostgreSQL), NoSQL CRUD (MongoDB), and data integration into a star schema (ETL with Apache Hop).
 
-## Discentes
+## Students
 
-- Evilyn Aquino dos Santos 
+- Evilyn Aquino dos Santos
 - Nicolle Rillary Santana Silva
 
-## Estrutura do repositório
+## Repository structure
 
 ```
 data-engineering-project/
-├── parte1-crud-relacional/    # CRUD em PostgreSQL (AWS RDS)
-├── parte2-crud-nosql/         # CRUD em MongoDB (AWS EC2)
-├── parte3-integracao-de-dados/ # Esquema estrela + ETL (Apache Hop)
+├── part1-relational-crud/    # CRUD in PostgreSQL (AWS RDS)
+├── part2-nosql-crud/         # CRUD in MongoDB (AWS EC2)
+├── part3-data-integration/ # Star schema + ETL (Apache Hop)
 └── README.md
 ```
 
-## Modelo de dados
+## Data model
 
-A estrutura das tabelas segue o esquema relacional **"universidade"** trabalhado em aula (dump fornecido pelo professor). Esse esquema tem 16 tabelas ao todo; o CRUD desenvolvido neste trabalho (Partes 1 e 2) manipula especificamente quatro delas:
+The table structure follows the **"universidade"** relational schema worked on in class (dump provided by the professor). This schema has 16 tables in total; the CRUD developed in this project (Parts 1 and 2) specifically handles four of them:
 
-- **usuario** — chave: `cpf`. Dados pessoais e de acesso (nome, data de nascimento, e-mail e telefone em lista, login, senha)
-- **estudante** — chave: `mat_estudante`. Especialização de usuário (referencia `usuario` por `cpf`; campos `mc` e `ano_ingresso`)
-- **curso** — chave: `idcurso`. Definido por nome, grau (Bacharelado/Licenciatura Plena), turno, campus e nível
-- **vinculo** — chave: `idvinculo`. Associação entre um estudante e um curso ao longo do tempo (status: Ativo/Cancelada/Formando/Graduado; datas de entrada e saída)
+- **usuario** — key: `cpf`. Personal and access data (name, date of birth, email and phone list, login, password)
+- **estudante** — key: `mat_estudante`. Specialization of user (references `usuario` via `cpf`; fields `mc` and `ano_ingresso`)
+- **curso** — key: `idcurso`. Defined by name, degree type (Bacharelado/Licenciatura Plena), shift, campus, and level
+- **vinculo** — key: `idvinculo`. Association between a student and a course over time (status: Ativo/Cancelada/Formando/Graduado; entry and exit dates)
 
-As demais 12 tabelas do esquema do professor (`professor`, `departamento`, `disciplina`, `semestre`, `turma`, `leciona`, `cursa`, `projeto`, `plano`, `sala`, `horario`, `alocacao`) fazem parte do banco relacional completo e servem de fonte de dados para a Parte 3 (ETL / esquema estrela).
+The other 12 tables of the professor's schema (`professor`, `departamento`, `disciplina`, `semestre`, `turma`, `leciona`, `cursa`, `projeto`, `plano`, `sala`, `horario`, `alocacao`) are part of the complete relational database and serve as a data source for Part 3 (ETL / star schema).
 
 ---
 
-## Parte 1 — CRUD Relacional (PostgreSQL)
+## Part 1 — Relational CRUD (PostgreSQL)
 
-CRUD completo em Python, conectado a uma instância PostgreSQL hospedada no AWS RDS.
+Complete CRUD in Python, connected to a PostgreSQL instance hosted on AWS RDS.
 
-### Arquivos
-| Arquivo | Descrição |
+### Files
+| File | Description |
 |---|---|
-| `dump_completo_professor.sql` | Script original do professor: cria o esquema `universidade` completo (16 tabelas) com os dados de exemplo |
-| `db.py` | Módulo de conexão com o banco (lê credenciais do `.env`) |
-| `crud.py` | Funções puras de criação, leitura, atualização e remoção para usuario/curso/estudante/vinculo (16 funções, sem interface de usuário) |
-| `exibicao.py` | Funções responsáveis apenas por formatar e imprimir os dados na tela |
-| `menu.py` | Interface de linha de comando (menu interativo) — é o programa que o usuário efetivamente executa |
-| `requirements.txt` | Dependências Python |
+| `dump_completo_professor.sql` | Professor's original script: creates the full `universidade` schema (16 tables) with sample data |
+| `db.py` | Database connection module (reads credentials from `.env`) |
+| `crud.py` | Pure create, read, update, and delete functions for usuario/curso/estudante/vinculo (16 functions, no user interface) |
+| `exibicao.py` | Functions responsible only for formatting and printing data to the screen |
+| `menu.py` | Command-line interface (interactive menu) — this is the program the user actually runs |
+| `requirements.txt` | Python dependencies |
 
-### Como rodar
+### How to run
 
-1. Crie um arquivo `.env` dentro de `parte1-crud-relacional/` com:
+1. Create a `.env` file inside `parte1-crud-relacional/` with:
    ```
-   DB_HOST=seu-endpoint.rds.amazonaws.com
+   DB_HOST=your-endpoint.rds.amazonaws.com
    DB_PORT=5432
-   DB_NAME=nome_do_banco
+   DB_NAME=database_name
    DB_USER=postgres
-   DB_PASSWORD=sua_senha
+   DB_PASSWORD=your_password
    ```
-2. Instale as dependências:
+2. Install the dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Execute o `dump_completo_professor.sql` no banco (via pgAdmin 4 ou `psql`) — isso cria as 16 tabelas do esquema `universidade`, incluindo as 4 usadas pelo CRUD.
-4. Rode o programa interativo:
+3. Run `dump_completo_professor.sql` on the database (via pgAdmin 4 or `psql`) — this creates the 16 tables of the `universidade` schema, including the 4 used by the CRUD.
+4. Run the interactive program:
    ```bash
    python menu.py
    ```
-   Isso abre um menu no terminal, onde é possível escolher a entidade (usuário/curso/estudante/vínculo) e a operação (criar/buscar/listar/atualizar/deletar), digitando os dados na hora.
+   This opens a terminal menu where you can choose the entity (user/course/student/link) and the operation (create/search/list/update/delete), typing in the data on the spot.
 
 ---
 
-## Parte 2 — CRUD NoSQL (MongoDB)
+## Part 2 — NoSQL CRUD (MongoDB)
 
-CRUD completo em Python, conectado a uma instância própria do MongoDB hospedada em um servidor AWS EC2.
+Complete CRUD in Python, connected to a self-managed MongoDB instance hosted on an AWS EC2 server.
 
-### Mapeamento relacional → MongoDB
+### Relational → MongoDB mapping
 
-O mapeamento cobre **todas as 16 tabelas** do esquema do professor, representadas em 7 coleções:
+The mapping covers **all 16 tables** of the professor's schema, represented in 7 collections:
 
-| Tabela(s) relacional(is) | Representação no MongoDB |
+| Relational table(s) | MongoDB representation |
 |---|---|
-| `usuario` | Coleção `usuarios` (chave natural: `cpf`) |
-| `estudante`, `professor` | Subdocumentos embutidos em `usuarios` (relação 1:1) |
-| `vinculo`, `cursa`, `plano` | Listas embutidas dentro de `usuarios.estudante` (relação 1:N) |
-| `curso` | Coleção própria `cursos` |
-| `departamento` | Coleção própria `departamentos` |
-| `disciplina` | Coleção própria `disciplinas` |
-| `semestre` | Coleção própria `semestres` |
-| `projeto` | Coleção própria `projetos` |
-| `turma`, `leciona`, `sala`, `horario`, `alocacao` | Coleção `turmas`, com `professores` e `alocacoes` embutidos |
+| `usuario` | `usuarios` collection (natural key: `cpf`) |
+| `estudante`, `professor` | Subdocuments embedded in `usuarios` (1:1 relationship) |
+| `vinculo`, `cursa`, `plano` | Lists embedded within `usuarios.estudante` (1:N relationship) |
+| `curso` | Dedicated `cursos` collection |
+| `departamento` | Dedicated `departamentos` collection |
+| `disciplina` | Dedicated `disciplinas` collection |
+| `semestre` | Dedicated `semestres` collection |
+| `projeto` | Dedicated `projetos` collection |
+| `turma`, `leciona`, `sala`, `horario`, `alocacao` | `turmas` collection, with embedded `professores` and `alocacoes` |
 
-O **CRUD em código** (`crud_mongo.py`) manipula apenas as quatro entidades pedidas no enunciado (usuário, estudante, curso, vínculo) — as demais coleções existem só para fins de representação/mapeamento, sem operações de CRUD associadas.
+The **CRUD in code** (`crud_mongo.py`) handles only the four entities required by the assignment (user, student, course, link) — the other collections exist only for representation/mapping purposes, with no associated CRUD operations.
 
-### Arquivos
-| Arquivo | Descrição |
+### Files
+| File | Description |
 |---|---|
-| `mongo_schema.js` | Script de criação de todas as 7 coleções, com validação de esquema (`$jsonSchema`) e índices |
-| `mongo_db.py` | Módulo de conexão com o banco (lê credenciais do `.env`) |
-| `crud_mongo.py` | Funções de criação, leitura, atualização e remoção para usuário/estudante/curso/vínculo |
-| `requirements_mongo.txt` | Dependências Python |
-| `.env.example` | Modelo das variáveis de ambiente (sem dados reais) |
+| `mongo_schema.js` | Script that creates all 7 collections, with schema validation (`$jsonSchema`) and indexes |
+| `mongo_db.py` | Database connection module (reads credentials from `.env`) |
+| `crud_mongo.py` | Create, read, update, and delete functions for user/student/course/link |
+| `requirements_mongo.txt` | Python dependencies |
+| `.env.example` | Environment variables template (no real data) |
 
-### Como rodar
+### How to run
 
-1. Crie um arquivo `.env` dentro de `parte2-crud-nosql/` com:
+1. Create a `.env` file inside `parte2-crud-nosql/` with:
    ```
-   MONGO_URI=mongodb://usuario:senha@endereco-da-sua-ec2:27017/?authSource=admin
+   MONGO_URI=mongodb://user:password@your-ec2-address:27017/?authSource=admin
    MONGO_DB_NAME=bancoufs_nosql
    ```
-2. Instale as dependências:
+2. Install the dependencies:
    ```bash
    pip install -r requirements_mongo.txt
    ```
-3. Execute o `mongo_schema.js` no MongoDB (via `mongosh` ou pelo shell do MongoDB Compass) — recomenda-se colar em blocos pequenos (um `db.createCollection(...)` por vez).
-4. Rode o script de teste:
+3. Run `mongo_schema.js` in MongoDB (via `mongosh` or the MongoDB Compass shell) — it is recommended to paste it in small blocks (one `db.createCollection(...)` at a time).
+4. Run the test script:
    ```bash
    python crud_mongo.py
    ```
 
 ---
 
-## Parte 3 — Integração de Dados
+## Part 3 — Data Integration
 
-Construção de um esquema estrela e pipelines de ETL com Apache Hop, integrando os dados do banco relacional (Parte 1) com arquivos CSV do portal [dados.ufs.br](https://dados.ufs.br/group/ensino).
+Construction of a star schema and ETL pipelines with Apache Hop, integrating data from the relational database (Part 1) with CSV files from the [dados.ufs.br](https://dados.ufs.br/group/ensino) portal.
 
-O esquema estrela modela turmas de graduação, associando professor, disciplina, departamento, semestre e campus, com as métricas de matriculados, média de notas, aprovados e reprovados.
+The star schema models undergraduate classes (turmas), linking professor, course subject, department, semester, and campus, with the metrics of enrolled students, average grade, approved, and failed.
 
-### Arquivos
-| Arquivo | Descrição |
+### Files
+| File | Description |
 |---|---|
-| `dw_schema.sql` | Script de criação das tabelas de dimensão e da tabela de fatos |
-| `carga_dim_departamento.hpl` | Pipeline de carga da dimensão Departamento |
-| `carga_dim_professor.hpl` | Pipeline de carga da dimensão Professor |
-| `carga_dim_disciplina.hpl` | Pipeline de carga da dimensão Disciplina |
-| `carga_dim_semestre.hpl` | Pipeline de carga da dimensão Semestre |
-| `carga_dim_campus.hpl` | Pipeline de carga da dimensão Campus |
-| `carga_fato_turma.hpl` | Pipeline de carga da tabela de fatos Turma |
-| `uni-csv-unidades-academicas-da-ufs.csv`, `doc-csv-docentes-da-ufs.csv`, `com-csv-componentes-curriculares-da-ufs.csv`, `tur-csv-turmas-de-2025.csv` | Fontes de dados do portal dados.ufs.br |
+| `dw_schema.sql` | Script that creates the dimension tables and the fact table |
+| `carga_dim_departamento.hpl` | Load pipeline for the Department dimension |
+| `carga_dim_professor.hpl` | Load pipeline for the Professor dimension |
+| `carga_dim_disciplina.hpl` | Load pipeline for the Subject dimension |
+| `carga_dim_semestre.hpl` | Load pipeline for the Semester dimension |
+| `carga_dim_campus.hpl` | Load pipeline for the Campus dimension |
+| `carga_fato_turma.hpl` | Load pipeline for the Turma fact table |
+| `uni-csv-unidades-academicas-da-ufs.csv`, `doc-csv-docentes-da-ufs.csv`, `com-csv-componentes-curriculares-da-ufs.csv`, `tur-csv-turmas-de-2025.csv` | Data sources from the dados.ufs.br portal |
 
-### Fontes de dados
-- **Relacional (Parte 1):** todas as linhas originais do dump, mais as linhas inseridas via CRUD.
-- **CSV (dados.ufs.br):** Unidades Acadêmicas, Componentes Curriculares, Docentes e Turmas (2019–2025).
+### Data sources
+- **Relational (Part 1):** all original rows from the dump, plus the rows inserted via the CRUD.
+- **CSV (dados.ufs.br):** Academic Units, Curricular Components, Faculty, and Classes (2019–2025).
 
-### Como rodar
+### How to run
 
-1. Crie um banco de dados dedicado no mesmo servidor RDS da Parte 1 (separado do banco relacional) e execute `dw_schema.sql`.
-2. No Apache Hop, crie uma conexão de banco chamada `dw_ufs` apontando para esse banco.
-3. Abra os pipelines dentro de um projeto Hop cuja raiz seja a pasta `parte3-integracao-de-dados/` — os CSVs de entrada são referenciados por caminho relativo (`${Internal.Entry.Current.Directory}`).
-4. Execute primeiro os pipelines de dimensão (`carga_dim_*.hpl`) e, por último, `carga_fato_turma.hpl`.
+1. Create a dedicated database on the same RDS server as Part 1 (separate from the relational database) and run `dw_schema.sql`.
+2. In Apache Hop, create a database connection named `dw_ufs` pointing to that database.
+3. Open the pipelines inside a Hop project whose root is the `parte3-integracao-de-dados/` folder — the input CSVs are referenced by relative path (`${Internal.Entry.Current.Directory}`).
+4. Run the dimension pipelines (`carga_dim_*.hpl`) first and `carga_fato_turma.hpl` last.
 
 ---
 
-## Segurança
+## Security
 
-Nenhum arquivo `.env` (contendo credenciais reais) é versionado neste repositório — cada pasta possui um `.gitignore` que impede seu envio. Deve-se utilizar os arquivos `.env.example` como referência para criar sua própria cópia local.
+No `.env` file (containing real credentials) is versioned in this repository — each folder has a `.gitignore` that prevents it from being committed. Use the `.env.example` files as a reference to create your own local copy.
