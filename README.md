@@ -119,7 +119,7 @@ O **CRUD em código** (`crud_mongo.py`) manipula apenas as quatro entidades pedi
 
 ---
 
-## Parte 3 — Integração de Dados (em andamento)
+## Parte 3 — Integração de Dados
 
 Construção de um esquema estrela e pipelines de ETL com Apache Hop, integrando os dados do banco relacional (Parte 1) com arquivos CSV do portal [dados.ufs.br](https://dados.ufs.br/group/ensino).
 
