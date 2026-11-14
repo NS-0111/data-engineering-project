@@ -1,6 +1,6 @@
 # Trabalho Prático de Engenharia de Dados
 
-Repositório do trabalho prático da disciplina de Engenharia de Dados, ministrada pelo professor André Britto de Carvalho (UFS).
+Repositório do trabalho prático da disciplina de Engenharia de Dados, ministrada pelo professor André Britto de Carvalho pela Universidade Federal de Sergipe.
 
 O projeto é dividido em três partes: CRUD relacional (PostgreSQL), CRUD NoSQL (MongoDB) e integração de dados em um esquema estrela (ETL com Apache Hop).
 
