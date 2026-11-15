@@ -15,7 +15,7 @@ The project is divided into three parts: relational CRUD (PostgreSQL), NoSQL CRU
 data-engineering-project/
 ├── part1-relational-crud/    # CRUD in PostgreSQL (AWS RDS)
 ├── part2-nosql-crud/         # CRUD in MongoDB (AWS EC2)
-├── part3-data-integration/ # Star schema + ETL (Apache Hop)
+├── part3-data-integration/   # Star schema + ETL (Apache Hop)
 └── README.md
 ```
 
